@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Models\Tenant\Products;
+
+use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+class Product extends Model implements HasMedia
+{
+    use InteractsWithMedia;
+    protected $fillable = [
+        'sku',
+        'name',
+        'description',
+        'unit_cost',
+        'unit_price',
+        'expense_account',
+        'revenue_account',
+        'purchase_tax_rate',
+        'revenue_tax_rate',
+        'quantity',
+        'avg_unit_cost',
+        'inventory_value',
+        'measurement_unit'
+    ];
+}

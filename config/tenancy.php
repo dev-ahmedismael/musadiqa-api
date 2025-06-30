@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
+use App\Models\Central\Tenant\Tenant;
 use Stancl\Tenancy\Database\Models\Domain;
-use Stancl\Tenancy\Database\Models\Tenant;
 
 return [
     'tenant_model' => Tenant::class,
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
-
     'domain_model' => Domain::class,
-
     /**
      * The list of domains hosting your central app.
      *
@@ -20,7 +18,6 @@ return [
         '127.0.0.1',
         'localhost',
     ],
-
     /**
      * Tenancy bootstrappers are executed when tenancy is initialized.
      * Their responsibility is making Laravel features tenant-aware.
@@ -34,26 +31,22 @@ return [
         Stancl\Tenancy\Bootstrappers\QueueTenancyBootstrapper::class,
         // Stancl\Tenancy\Bootstrappers\RedisTenancyBootstrapper::class, // Note: phpredis is needed
     ],
-
     /**
      * Database tenancy config. Used by DatabaseTenancyBootstrapper.
      */
     'database' => [
         'central_connection' => env('DB_CONNECTION', 'central'),
-
         /**
          * Connection used as a "template" for the dynamically created tenant database connection.
          * Note: don't name your template connection tenant. That name is reserved by package.
          */
         'template_tenant_connection' => null,
-
         /**
          * Tenant database names are created like this:
          * prefix + tenant_id + suffix.
          */
-        'prefix' => 'tenant',
+        'prefix' => 'musadiqa_organization_',
         'suffix' => '',
-
         /**
          * TenantDatabaseManagers are classes that handle the creation & deletion of tenant databases.
          */
@@ -61,21 +54,18 @@ return [
             'sqlite' => Stancl\Tenancy\TenantDatabaseManagers\SQLiteDatabaseManager::class,
             'mysql' => Stancl\Tenancy\TenantDatabaseManagers\MySQLDatabaseManager::class,
             'pgsql' => Stancl\Tenancy\TenantDatabaseManagers\PostgreSQLDatabaseManager::class,
-
-        /**
+            /**
          * Use this database manager for MySQL to have a DB user created for each tenant database.
          * You can customize the grants given to these users by changing the $grants property.
          */
             // 'mysql' => Stancl\Tenancy\TenantDatabaseManagers\PermissionControlledMySQLDatabaseManager::class,
-
-        /**
+            /**
          * Disable the pgsql manager above, and enable the one below if you
          * want to separate tenant DBs by schemas rather than databases.
          */
             // 'pgsql' => Stancl\Tenancy\TenantDatabaseManagers\PostgreSQLSchemaManager::class, // Separate by schema instead of database
         ],
     ],
-
     /**
      * Cache tenancy config. Used by CacheTenancyBootstrapper.
      *
@@ -88,9 +78,9 @@ return [
      * You can clear cache selectively by specifying the tag.
      */
     'cache' => [
-        'tag_base' => 'tenant', // This tag_base, followed by the tenant_id, will form a tag that will be applied on each cache call.
+        'tag_base' => 'tenant',
+        // This tag_base, followed by the tenant_id, will form a tag that will be applied on each cache call.
     ],
-
     /**
      * Filesystem tenancy config. Used by FilesystemTenancyBootstrapper.
      * https://tenancyforlaravel.com/docs/v3/tenancy-bootstrappers/#filesystem-tenancy-boostrapper.
@@ -99,13 +89,12 @@ return [
         /**
          * Each disk listed in the 'disks' array will be suffixed by the suffix_base, followed by the tenant_id.
          */
-        'suffix_base' => 'tenant',
+        'suffix_base' => 'musadiqa_organization',
         'disks' => [
             'local',
             'public',
             // 's3',
         ],
-
         /**
          * Use this for local disks.
          *
@@ -116,7 +105,6 @@ return [
             'local' => '%storage_path%/app/',
             'public' => '%storage_path%/app/public/',
         ],
-
         /**
          * Should storage_path() be suffixed.
          *
@@ -127,7 +115,6 @@ return [
          * you may want to disable this if you are experiencing these edge case issues.
          */
         'suffix_storage_path' => true,
-
         /**
          * By default, asset() calls are made multi-tenant too. You can use global_asset() and mix()
          * for global, non-tenant-specific assets. However, you might have some issues when using
@@ -137,7 +124,6 @@ return [
          */
         'asset_helper_tenancy' => true,
     ],
-
     /**
      * Redis tenancy config. Used by RedisTenancyBootstrapper.
      *
@@ -148,12 +134,12 @@ return [
      * either using the Redis facade or by injecting it as a dependency.
      */
     'redis' => [
-        'prefix_base' => 'tenant', // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
+        'prefix_base' => 'musadiqa_organization',
+        // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
         'prefixed_connections' => [ // Redis connections whose keys are prefixed, to separate one tenant's keys from another.
             // 'default',
         ],
     ],
-
     /**
      * Features are classes that provide additional functionality
      * not needed for tenancy to be bootstrapped. They are run
@@ -170,7 +156,6 @@ return [
         // Stancl\Tenancy\Features\CrossDomainRedirect::class, // https://tenancyforlaravel.com/docs/v3/features/cross-domain-redirect
         // Stancl\Tenancy\Features\ViteBundler::class,
     ],
-
     /**
      * Should tenancy routes be registered.
      *
@@ -179,7 +164,6 @@ return [
      * storage (e.g. S3 / Dropbox) or have a custom asset controller.
      */
     'routes' => true,
-
     /**
      * Parameters used by the tenants:migrate command.
      */
@@ -188,7 +172,6 @@ return [
         '--path' => [database_path('migrations/tenant')],
         '--realpath' => true,
     ],
-
     /**
      * Parameters used by the tenants:seed command.
      */
