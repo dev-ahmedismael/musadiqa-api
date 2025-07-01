@@ -16,7 +16,7 @@ return [/*
         'sanctum/csrf-cookie'
     ],
     'allowed_methods' => ['*'],
-    'allowed_origins' => ['http://localhost:3000', 'https://musadiqa.com', 'https://*.musadiqa.com'],
+    'allowed_origins' => ['http://localhost:3000', 'https://musadiqa.com', 'https://*.musadiqa.com', 'http://localhost'],
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],

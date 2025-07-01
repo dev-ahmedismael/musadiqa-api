@@ -3,6 +3,7 @@
 namespace App\Models\Tenant\Products;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -22,6 +23,12 @@ class Product extends Model implements HasMedia
         'quantity',
         'avg_unit_cost',
         'inventory_value',
-        'measurement_unit'
+        'measurement_unit',
+        'warehouse_id'
     ];
+
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
 }

@@ -35,6 +35,7 @@ class ProductRequest extends FormRequest
             'avg_unit_cost' => ['nullable', 'numeric'],
             'inventory_value' => ['nullable', 'numeric'],
             'measurement_unit' => ['nullable', 'string', 'max:50'],
+            'warehouse_id' => ['numeric', 'required'],
         ];
     }
 }

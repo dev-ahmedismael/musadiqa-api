@@ -32,6 +32,8 @@ return new class extends Migration
 
             $table->string('measurement_unit', 50)->nullable();
 
+            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->cascadeOnUpdate()->cascadeOnDelete();
+
             $table->timestamps();
         });
     }
