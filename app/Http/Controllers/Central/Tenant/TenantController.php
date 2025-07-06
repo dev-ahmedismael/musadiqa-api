@@ -66,7 +66,6 @@ class TenantController extends Controller
         });
 
         Auth::login($user);
-        session()->put('tenant_id', $tenant->id);
 
         return $response;
     }

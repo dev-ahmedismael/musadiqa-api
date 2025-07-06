@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Central\Tenant\TenantController;
-use App\Http\Controllers\Central\User\UserController;
-use App\Http\Controllers\Tenant\Accountants\AccountController;
-use App\Http\Controllers\Tenant\Accountants\JournalController;
-use App\Http\Controllers\Tenant\Accountants\TaxRateController;
-use App\Http\Controllers\Tenant\BankAccounts\BankAccountController;
-use App\Http\Controllers\Tenant\Branches\BranchController;
-use App\Http\Controllers\Tenant\CostCenter\CostCenterController;
-use App\Http\Controllers\Tenant\Customers\ContactController;
-use App\Http\Controllers\Tenant\FixedAssets\FixedAssetController;
-use App\Http\Controllers\Tenant\Products\InventoryAdjustmentController;
-use App\Http\Controllers\Tenant\Products\ProductController;
-use App\Http\Controllers\Tenant\Products\WarehouseController;
-use App\Http\Controllers\Tenant\Projects\ProjectController;
-use App\Http\Middleware\InitializeTenantFromSession;
-use Illuminate\Support\Facades\Route;
+    use App\Http\Controllers\Central\Tenant\TenantController;
+    use App\Http\Controllers\Central\User\UserController;
+    use App\Http\Controllers\Tenant\Accounting\Accountants\AccountController;
+    use App\Http\Controllers\Tenant\Accounting\Accountants\JournalController;
+    use App\Http\Controllers\Tenant\Accounting\Accountants\TaxRateController;
+    use App\Http\Controllers\Tenant\Accounting\BankAccounts\BankAccountController;
+    use App\Http\Controllers\Tenant\Accounting\Branches\BranchController;
+    use App\Http\Controllers\Tenant\Accounting\CostCenter\CostCenterController;
+    use App\Http\Controllers\Tenant\Accounting\Customers\ContactController;
+    use App\Http\Controllers\Tenant\Accounting\FixedAssets\FixedAssetController;
+    use App\Http\Controllers\Tenant\Accounting\Projects\ProjectController;
+    use App\Http\Controllers\Tenant\Inventory\InventoryAdjustmentController;
+    use App\Http\Controllers\Tenant\Inventory\ProductController;
+    use App\Http\Controllers\Tenant\Inventory\WarehouseController;
+    use Illuminate\Support\Facades\Route;
+    use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
 
-Route::prefix('api')->middleware(['web', 'auth', InitializeTenantFromSession::class])->group(function () {
+    Route::prefix('api')->middleware(['web', 'auth', InitializeTenancyByRequestData::class])->group(function () {
     // Organization
     Route::apiResource('organizations', TenantController::class);
     Route::post('organizations/logo', [TenantController::class, 'update_logo']);
@@ -41,8 +41,5 @@ Route::prefix('api')->middleware(['web', 'auth', InitializeTenantFromSession::cl
     Route::apiResource('adjustments', InventoryAdjustmentController::class);
     Route::apiResource('warehouses', WarehouseController::class);
 
-    // Human Resources
 
-    // Logout
-    Route::post('logout', [UserController::class, 'logout']);
-});
+ });

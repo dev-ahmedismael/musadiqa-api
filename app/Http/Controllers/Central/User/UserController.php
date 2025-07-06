@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Central\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Central\User\LoginRequest;
 use App\Http\Requests\Central\User\RegisterRequest;
+use App\Http\Requests\Central\User\UpdateProfileRequest;
+use App\Http\Resources\Central\User\UserResource;
 use App\Models\Central\User\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,14 +17,6 @@ class UserController extends Controller
 {
     public function register(RegisterRequest $request)
     {
-        if (User::where('email', $request->email)->exists()) {
-            return response()->json(['message' => 'البريد الإلكتروني الذي أدخلته مستخدم بالفعل.'], 409);
-        }
-
-        if (User::where('phone', $request->phone)->exists()) {
-            return response()->json(['message' => 'رقم الجوال الذي أدخلته مستخدم بالفعل.'], 409);
-        }
-
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -31,12 +25,12 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $credentials = $request->only('email', 'password');
 
-        Auth::login($user);
+        $token = auth()->attempt($credentials);
 
         return response()->json([
-            'message' => 'تم إنشاء حسابك بنجاح.',
+            'message' => trans('auth.registered'),
             'token' => $token
         ], 201);
     }
@@ -45,31 +39,22 @@ class UserController extends Controller
     {
         $user = User::where('email', $request->email)->first();
 
-        if (!$user) {
-            return response()->json(['message' => 'البريد الإلكتروني الذي أدخلته غير مسجل لدينا.'], 404);
-        }
+        $credentials = $request->only('email', 'password');
 
-        if (!Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'كلمة المرور غير صحيحة.'], 401);
+        if (!$token = auth()->attempt($credentials)) {
+            return response()->json(['message' => trans('auth.failed')], 401);
         }
 
         $tenant = $user->tenants()->first();
 
-        Auth::login($user);
-
         if (!$tenant) {
-            return response()->json(['message' => 'تم تسجيل الدخول بنجاح.', 'domain' =>  'authentication/create-new-organization'], 200);
+            return response()->json(['message' => trans('auth.logged_in'), 'domain' =>  'authentication/create-new-organization', 'token'
+            => $token], 200);
         }
-
-        session()->put('tenant_id', $tenant->id);
 
         $domain = $tenant->domains()->first()->domain ?? null;
 
-        if (!$domain) {
-            return response()->json(['message' => 'لم يتم العثور على نطاق للمؤسسة.'], 404);
-        }
-
-        $response = ['message' => 'تم تسجيل الدخول بنجاح.', 'domain' => $domain];
+        $response = ['message' => trans('auth.logged_in'), 'domain' => $domain, 'token' => $token];
 
         return response()->json($response, 200);
     }
@@ -78,7 +63,7 @@ class UserController extends Controller
     {
         $user = Auth::user()->load(['tenants.domains', 'tenants.media', 'media']);
 
-        $user['profile_picture'] = $user->media->first()?->original_url;
+        $user['avatar'] = $user->getFirstMediaUrl('avatar');
 
         $tenants = $user->tenants->map(function ($tenant) {
             return [
@@ -89,17 +74,39 @@ class UserController extends Controller
         });
 
         return response()->json([
-            'user' => $user,
+            'user' => new UserResource($user),
             'organizations' => $tenants,
         ], 200);
     }
 
+    public function update(UpdateProfileRequest $request)
+    {
+        $user = auth()->user();
+
+        $data = $request->only([
+            'first_name',
+            'last_name',
+            'email',
+            'phone',
+        ]);
+
+        $user->update($data);
+
+        if ($request->hasFile('avatar')) {
+            $user->clearMediaCollection('avatar');
+            $user->addMediaFromRequest('avatar')->toMediaCollection('avatar');
+        }
+
+        return response()->json([
+            'message' => 'تم تحديث البيانات بنجاح.',
+            'user' => $user->load('media'),
+            'avatar' => $user->getFirstMediaUrl('avatar'),
+        ]);
+    }
+
     public function logout()
     {
-        Auth::logout();
-
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
+        auth()->logout();
 
         return response()->json([
             'message' => 'تم تسجيل الخروج بنجاح.'

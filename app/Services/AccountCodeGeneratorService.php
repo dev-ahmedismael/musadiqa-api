@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Tenant\Accountants\Account;
+use App\Models\Tenant\Accounting\Accountants\Account;
 use Illuminate\Support\Str;
 
 class AccountCodeGeneratorService

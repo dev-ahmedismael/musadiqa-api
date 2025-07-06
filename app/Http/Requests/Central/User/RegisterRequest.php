@@ -24,17 +24,10 @@
             return [
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
-                'phone' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255',
+                'phone' => 'required|string|max:255|unique:users',
+                'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:6',
             ];
         }
 
-        public function messages(): array
-        {
-            return [
-                'phone.unique' => 'رقم الجوال الذي أدخلته مستخدم من قبل.',
-                'email.unique' => 'البريد الإلكتروني الذي أدخلته مستخدم من قبل.'
-            ];
-        }
     }

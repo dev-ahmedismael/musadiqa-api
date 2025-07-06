@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Tenant\BankAccounts\BankAccount;
+use App\Models\Tenant\Accounting\BankAccounts\BankAccount;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 class BankAccountSeeder extends Seeder
@@ -15,27 +16,32 @@ class BankAccountSeeder extends Seeder
     {
         $bank_accounts = [
             [
-                'name_ar' => 'الحساب البنكي',
-                'name_en' => 'Bank Account',
+                'name' => [
+                    'ar' => 'الحساب البنكي',
+                    'en' => 'Bank Account',
+                ],
                 'type' => 'BANK_ACCOUNT',
-                'currency' => 'SAR'
+                'currency' => 'SAR',
             ],
             [
-                'name_ar' => 'المصروفات النثرية',
-                'name_en' => 'Petty Cash',
+                'name' => [
+                    'ar' => 'المصروفات النثرية',
+                    'en' => 'Petty Cash',
+                ],
                 'type' => 'PETTY_CASH',
-                'currency' => 'SAR'
+                'currency' => 'SAR',
             ],
             [
-                'name_ar' => 'الخزينة',
-                'name_en' => 'Undeposited Funds',
+                'name' => [
+                    'ar' => 'الخزينة',
+                    'en' => 'Undeposited Funds',
+                ],
                 'type' => 'PETTY_CASH',
-                'currency' => 'SAR'
+                'currency' => 'SAR',
             ],
         ];
 
-        foreach ($bank_accounts as $bank_account) {
-            BankAccount::create($bank_account);
-        }
+        DB::table('bank_accounts')->insert($bank_accounts);
+
     }
 }
