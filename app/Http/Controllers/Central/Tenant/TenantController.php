@@ -54,9 +54,7 @@ class TenantController extends Controller
                 ]
             );
 
-            Artisan::call('db:seed', ['--class' => 'Database\Seeders\BankAccountSeeder']);
-            Artisan::call('db:seed', ['--class' => 'Database\Seeders\AccountSeeder']);
-            Artisan::call('db:seed', ['--class' => 'Database\Seeders\TaxRateSeeder']);
+
 
             $response = response()->json([
                 'message' => 'تم إنشاء المؤسسة بنجاح.',
