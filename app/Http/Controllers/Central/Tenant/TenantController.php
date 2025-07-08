@@ -7,7 +7,6 @@ use App\Http\Requests\Central\Tenant\TenantRequest;
 use App\Models\Central\Tenant\Tenant;
 use App\Models\Tenant\User\User as TenantUser;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Stancl\Tenancy\Database\Models\Domain;
 
@@ -30,7 +29,7 @@ class TenantController extends Controller
         $domain = $request->input('domain');
 
         if (Domain::where('domain', $domain)->exists()) {
-            return response()->json(['message' => 'الرابط الذي أدخلته مستخدم بالفعل'], 409);
+            return response()->json(['message' => trans('tenant.domain_used')], 409);
         };
 
         $response = null;
@@ -53,8 +52,6 @@ class TenantController extends Controller
                     'password' => $user->password,
                 ]
             );
-
-
 
             $response = response()->json([
                 'message' => 'تم إنشاء المؤسسة بنجاح.',

@@ -35,6 +35,7 @@ class SeedTenantData
         Artisan::call('db:seed', ['--class' => 'Database\Seeders\AccountSeeder']);
         Artisan::call('db:seed', ['--class' => 'Database\Seeders\TaxRateSeeder']);
 
+
         tenancy()->end();
     }
 }

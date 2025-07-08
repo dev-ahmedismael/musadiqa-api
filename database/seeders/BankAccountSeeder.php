@@ -14,34 +14,10 @@ class BankAccountSeeder extends Seeder
      */
     public function run(): void
     {
-        $bank_accounts = [
-            [
-                'name' => [
-                    'ar' => 'الحساب البنكي',
-                    'en' => 'Bank Account',
-                ],
-                'type' => 'BANK_ACCOUNT',
-                'currency' => 'SAR',
-            ],
-            [
-                'name' => [
-                    'ar' => 'المصروفات النثرية',
-                    'en' => 'Petty Cash',
-                ],
-                'type' => 'PETTY_CASH',
-                'currency' => 'SAR',
-            ],
-            [
-                'name' => [
-                    'ar' => 'الخزينة',
-                    'en' => 'Undeposited Funds',
-                ],
-                'type' => 'PETTY_CASH',
-                'currency' => 'SAR',
-            ],
-        ];
+        $json = file_get_contents(database_path('data/bank_accounts.json'));
+
+        $bank_accounts = json_decode($json, true);
 
         DB::table('bank_accounts')->insert($bank_accounts);
-
     }
 }
