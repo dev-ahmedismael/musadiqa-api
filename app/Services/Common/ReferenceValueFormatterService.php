@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Common;
 
 use App\Enums\CountryType;
 use App\Enums\CurrencyType;

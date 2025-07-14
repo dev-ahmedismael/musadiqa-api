@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Accounting\Accountants\AccountRequest;
 use App\Models\Tenant\Accounting\Accountants\Account;
 use App\Models\Tenant\Accounting\BankAccounts\BankAccount;
-use App\Services\AccountCodeGeneratorService;
+use App\Services\Common\AccountCodeGeneratorService;
 use App\Traits\QueryBuilder;
 use Illuminate\Http\Request;
 
